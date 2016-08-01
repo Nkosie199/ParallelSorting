@@ -1,0 +1,2 @@
+MergeSortParallel
+QuickSortParallel
