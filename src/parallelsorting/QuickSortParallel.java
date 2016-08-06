@@ -1,5 +1,3 @@
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
 
 /**
@@ -9,24 +7,28 @@ import java.util.concurrent.RecursiveAction;
 public class QuickSortParallel extends RecursiveAction {
     int lo; // arguments
     int hi;
-    int array[];
+    static int array[];
+    int newArray[];
     //= {10, 7, 8, 9, 1, 5};
+    static int SEQUENTIAL_CUTOFF;
     
-    static final int SEQUENTIAL_CUTOFF=4000;
     
-    public QuickSortParallel(int[] arr, int lowerBound, int upperBound){
+    public QuickSortParallel(int[] arr, int lowerBound, int upperBound, int seqCut){
         array = arr;
         lo = lowerBound;
         hi = upperBound;
+        SEQUENTIAL_CUTOFF = seqCut;
     }
     
     protected void compute(){// return answer - instead of run
+        
+        //while (seqCutoff < 3)
         if((hi-lo) < SEQUENTIAL_CUTOFF) { //the size of the array
             quickSortMethod(array);
         }
         else{
-            QuickSortParallel left = new QuickSortParallel(array,lo,(hi+lo)/2);
-            QuickSortParallel right= new QuickSortParallel(array,(hi+lo)/2,hi);
+            QuickSortParallel left = new QuickSortParallel(array,lo,(hi+lo)/2,SEQUENTIAL_CUTOFF);
+            QuickSortParallel right= new QuickSortParallel(array,(hi+lo)/2,hi,SEQUENTIAL_CUTOFF);
             
             left.fork(); //
             right.compute();
@@ -39,7 +41,7 @@ public class QuickSortParallel extends RecursiveAction {
         int n = arr.length;
  
         sort(arr, 0, n-1);
-        printArray(arr);
+        //printArray(arr);
     }
     /* This function takes last element as pivot,
        places the pivot element at its correct
@@ -97,11 +99,13 @@ public class QuickSortParallel extends RecursiveAction {
     /* A utility function to print array of size n */
     static void printArray(int arr[])
     {
-        System.out.println("Pringing quick sorted array...");
+        
         for (int i=0; i<arr.length; ++i)
             System.out.print(arr[i]+" ");
         System.out.println();
     }
  
-    
+    static int[] getFinalArray(){
+        return array;
+    }
 }

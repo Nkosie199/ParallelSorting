@@ -1,5 +1,3 @@
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
 /**
  *
@@ -8,17 +6,19 @@ import java.util.concurrent.RecursiveAction;
 public class MergeSortParallel extends RecursiveAction {
     static int[] array;
     static int[] tempMergArr;
+    static int[] newArray;
     static int length;
     int lo; // arguments
     int hi;
     float tick; //the start time of the 
     
-    static final int SEQUENTIAL_CUTOFF=4000;
+    static int SEQUENTIAL_CUTOFF;
     
-    public MergeSortParallel(int[] arr, int lowerBound, int upperBound){
+    public MergeSortParallel(int[] arr, int lowerBound, int upperBound, int seqCut){
         array = arr;
         lo = lowerBound;
         hi = upperBound;
+        SEQUENTIAL_CUTOFF = seqCut;
     }
     
     protected void compute(){// return answer - instead of run
@@ -27,8 +27,8 @@ public class MergeSortParallel extends RecursiveAction {
             mergeSortMethod(array);
         }
         else{
-            MergeSortParallel left = new MergeSortParallel(array,lo,(hi+lo)/2);
-            MergeSortParallel right= new MergeSortParallel(array,(hi+lo)/2,hi);
+            MergeSortParallel left = new MergeSortParallel(array,lo,(hi+lo)/2,SEQUENTIAL_CUTOFF);
+            MergeSortParallel right= new MergeSortParallel(array,(hi+lo)/2,hi,SEQUENTIAL_CUTOFF);
             
             left.fork(); //
             right.compute();
@@ -37,13 +37,13 @@ public class MergeSortParallel extends RecursiveAction {
     }
     
     public static void mergeSortMethod(int[] inputArray){
-        System.out.println("Printing merge sorted array..."); 
+         
         sort(inputArray);
-        for(int i:inputArray){
-            System.out.print(i);
-            System.out.print(" ");
-        }
-        System.out.println("");
+//        for(int i:inputArray){
+//            System.out.print(i);
+//            System.out.print(" ");
+//        }
+//        System.out.println("");
     }
      
     static void sort(int inputArr[]) {
@@ -74,7 +74,7 @@ public class MergeSortParallel extends RecursiveAction {
         int i = lowerIndex;
         int j = middle + 1;
         int k = lowerIndex;
-        while (i <= middle && j <= higherIndex) {
+        while (i <= middle && j <= higherIndex) { //while there are still values on either array
             if (tempMergArr[i] <= tempMergArr[j]) {
                 array[k] = tempMergArr[i];
                 i++;
@@ -90,5 +90,9 @@ public class MergeSortParallel extends RecursiveAction {
             i++;
         }
  
+    }
+    
+    public static int[] getFinalArray(){
+        return array;
     }
 }
