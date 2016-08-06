@@ -65,15 +65,15 @@ public class DriverSort {
     static final ForkJoinPool fjPool = new ForkJoinPool();
     
     public static void main (String[] args){
-        /*
-        String[] cmdArgs = args[0].split(" "); //takes in command line parameters:...    
-        sortType = cmdArgs[0];
-        arraySizeMin = Integer.parseInt(cmdArgs[1]);
-        arraySizeMax = Integer.parseInt(cmdArgs[2]);
-        increment = Integer.parseInt(cmdArgs[3]);
-        outFile = cmdArgs[4];     
-        */       
-        System.gc();
+        //takes in command line parameters:... 
+        sortType = args[0];
+        arraySizeMin = Integer.parseInt(args[1]);
+        arraySizeMax = Integer.parseInt(args[2]);
+        increment = Integer.parseInt(args[3]);
+        outFile = args[4];     
+        
+	System.gc();	  
+	/*
         //checking for number of processors
         Runtime runtime = Runtime.getRuntime();
         System.out.println("Number of available processors "+runtime.availableProcessors()+"");
@@ -85,13 +85,13 @@ public class DriverSort {
         
         //2nd parameter <arraySizeMin>: Size of the smallest (random) array of integers to be sorted
         System.out.println("Please enter the size of the smallest (random) array of integers to be sorted");
-        System.out.println("(prefereably greater than 1000 in order for both sequential and parallel algorithms to work)");
+        //System.out.println("(prefereably greater than 1000 in order for both sequential and parallel algorithms to work)");
         sc = new Scanner(System.in);
         arraySizeMin = sc.nextInt();
         
         //3rd parameter <arraySizeMax>: Size of the largest (random) array of integers to be sorted
         System.out.println("Please enter the size of the largest (random) array of integers to be sorted");
-        System.out.println("(prefereably less than 1000000 in order for both sequential and parallel algorithms to work)");
+        //System.out.println("(prefereably less than 1000000 in order for both sequential and parallel algorithms to work)");
         sc = new Scanner(System.in);
         arraySizeMax = sc.nextInt();
         
@@ -104,13 +104,7 @@ public class DriverSort {
         System.out.println("Please enter the name of the output text file");
         sc = new Scanner(System.in);
         outFile = sc.nextLine();
-        
-        //debug print parameters...
-            //System.out.println("sortType = "+sortType);
-            //System.out.println("arraySizeMin = "+arraySizeMin);
-            //System.out.println("arraySizeMax = "+arraySizeMax);
-            //System.out.println("increment = "+increment);
-            //System.out.println("outFile = "+outFile);
+        */
         
         try {
             writer = new PrintWriter(outFile, "UTF-8");
@@ -145,12 +139,13 @@ public class DriverSort {
                         time = tock();
                         //
                         finalArray = MergeSortParallel.getFinalArray();
+/*
                         for(int v:finalArray){ //prints out final array 
                             System.out.print(v);
                             System.out.print(" ");
                         }
                         System.out.println("");
-                        
+*/                       
                         //
                         System.out.println("Run took "+ time +" seconds");
                         System.out.println("Number of threads: "+(int) arraySizeMax/seqCut[k]);
@@ -171,11 +166,13 @@ public class DriverSort {
                         time = tock();
                         //
                         finalArray = QuickSortParallel.getFinalArray();
+/*
                         for(int v:finalArray){
                             System.out.print(v);
                             System.out.print(" ");
                         }
                         System.out.println("");
+*/
                         //
                         System.out.println("Run took "+ time +" seconds");
                         System.out.println("Number of threads: "+(int) arraySizeMax/seqCut[k]);
@@ -196,11 +193,13 @@ public class DriverSort {
                         time = tock();
                         //
                         finalArray = BubbleSortParallel.getFinalArray();
+/*
                         for(int v:finalArray){
                             System.out.print(v);
                             System.out.print(" ");
                         }
                         System.out.println("");
+*/
                         //
                         System.out.println("Run took "+ time +" seconds");
                         System.out.println("Number of threads: "+(int) arraySizeMax/seqCut[k]);
