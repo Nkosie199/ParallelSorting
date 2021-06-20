@@ -26,7 +26,7 @@ public class DriverSort {
     static Random rn = new Random();
     static float time;
     static int[] finalArray;
-    static float seqCut[] = {1000000, 10, 100, 1000}; //sequential cutoff: 1, 5 and 50 threads respectively
+    static float seqCut[] = {200}; //sequential cutoff: 1, 5 and 50 threads respectively
     //therefore array size must between 1000 & 1000000 in order for both sequential and parallel algorithms to take place
     
     //run input parameters...
@@ -36,10 +36,13 @@ public class DriverSort {
     static int increment;
     static String outFile;
     static PrintWriter writer;
+    static int i;
+    static int o=0;
     
     //variables to store output parameters
-    static ArrayList<Float> bestTime = new ArrayList<>();
-    static ArrayList<Float> bestNoOfThreads = new ArrayList<>();
+    static ArrayList<Float> bestTime;
+    static ArrayList<Float> bestNoOfThreads;
+    static float averageTime = 0;
     
     private static void tick(){
 	startTime = System.currentTimeMillis();
@@ -119,8 +122,11 @@ public class DriverSort {
         }
         
         //now we need a loop to randomly generate integer arrays....
-        for (int i=arraySizeMin; i<arraySizeMax; i=i+increment){
+        for (i=arraySizeMin; i<arraySizeMax; i=i+increment){
+            
             array = new int[i]; //initaite an integer array of size i
+            bestTime = new ArrayList<>();
+            bestNoOfThreads = new ArrayList<>();
             
             for (int l=0; l<i; l++){ //for each element in that array of size i
                int randomInt = rn.nextInt(100); //populate the index with a random integer
@@ -149,12 +155,16 @@ public class DriverSort {
                         //
                         System.out.println("Run took "+ time +" seconds");
                         System.out.println("Number of threads: "+(int) arraySizeMax/seqCut[k]);
+                        System.out.println("");
                         bestTime.add(time);
-                        bestNoOfThreads.add(arraySizeMax/seqCut[k]);
+                        averageTime = averageTime+ time;
+                        o++;
+                        bestNoOfThreads.add((int) arraySizeMax/seqCut[k]);
                         //System.out.println("");                      
                     }
                     //writer.printf("%-22s%-22s%s-22s%s\n","ArraySize","OptimalNumThreads","BestTime","BestSpeedup");
                     writer.printf("%-22s%-22s%-22s%s\n",i,bestNoOfThreads.get(bestTime.indexOf(getBestTime(bestTime))), getBestTime(bestTime), getBestTime(bestTime)/bestTime.get(0));                       
+                   
                     break;
                 case "quicksort":
                     //QuickSortParallel qsp = new QuickSortParallel(array, smallestArraySize, largestArraySize);
@@ -177,6 +187,8 @@ public class DriverSort {
                         System.out.println("Run took "+ time +" seconds");
                         System.out.println("Number of threads: "+(int) arraySizeMax/seqCut[k]);
                         bestTime.add(time);
+                        averageTime = averageTime+ time;
+                        o++;
                         bestNoOfThreads.add(arraySizeMax/seqCut[k]);
                         //System.out.println("");
                     }
@@ -204,6 +216,8 @@ public class DriverSort {
                         System.out.println("Run took "+ time +" seconds");
                         System.out.println("Number of threads: "+(int) arraySizeMax/seqCut[k]);
                         bestTime.add(time);
+                        averageTime = averageTime+ time;
+                        o++;
                         bestNoOfThreads.add(arraySizeMax/seqCut[k]);
                         //System.out.println("");
                     }
@@ -213,6 +227,7 @@ public class DriverSort {
             }
         }       
         //next...
+        writer.printf("Average time: ("+averageTime+"/"+o+") = "+ averageTime/o);
         writer.close();
     }
 }

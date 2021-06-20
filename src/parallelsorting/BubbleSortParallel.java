@@ -7,7 +7,7 @@ public class BubbleSortParallel extends RecursiveAction{
     int lo; // arguments
     int hi;
     static int array[];
-    static int n, c, d, swap;
+    static int n, c, d, swop;
     static int SEQUENTIAL_CUTOFF;
     
     public BubbleSortParallel(int[] arr, int lowerBound, int upperBound, int seqCut){
@@ -38,9 +38,9 @@ public class BubbleSortParallel extends RecursiveAction{
             for (d = 0; d < n - c - 1; d++) {
                 if (array[d] > array[d+1]) /* For descending order use < */
                 {
-                    swap       = array[d];
+                    swop       = array[d];
                     array[d]   = array[d+1];
-                    array[d+1] = swap;
+                    array[d+1] = swop;
                 }
             }
         }
